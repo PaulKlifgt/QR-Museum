@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Авторизация</h1>
+    <hr>
+
+    {% if form.errors %}
+        {{form.errors.error}}
+    {% endif %}
+    
+
+    <form action="{{url('login')}}" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> 
+        Логин: {{form.username}}  <br><br>
+        Пароль: {{form.password}} <br> <br>
+        <button  class="btn btn-primary" style="width: fit-content; margin-top: 1vh;" type="submit">Вход</button>
+    </form>
+{% endblock content %}

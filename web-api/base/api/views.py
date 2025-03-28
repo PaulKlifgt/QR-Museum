@@ -14,7 +14,7 @@ def get_exhibit_by_id(request, id: int):
                 'description': exhibit.description, 
                 'average_rank': exhibit.average_rank, 
                 'count_rank': exhibit.count_rank, 
-                'section': exhibit.section}
+                'section': exhibit.section.name}
     else:
         data = {'error': "don't find"}
 
@@ -72,3 +72,9 @@ def get_all_sections(request):
             data[sec.name] = select_exh_by_sec(sec.id)
 
     return JsonResponse(data)
+
+
+def index(request):
+    context = {}
+    template_name = 'index.html'
+    return render(request=request, template_name=template_name, context=context)

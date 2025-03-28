@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Регистрация</h1>
+    <hr>
+    <form action="{{url('register')}}" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> 
+        Логин: {{form.username}}  <br><br>
+        Пароль: {{form.password1}} <br> <br>
+        Пароль ещё раз: {{form.password2}} <br> <br>
+        <details>
+            <summary>Какой должен быть пароль?</summary>
+            <ul>
+                <li>Пароль не должен быть слишком похож на другую вашу личную информацию.</li>
+                <li>Ваш пароль должен содержать как минимум 8 символов.</li>
+                <li>Пароль не должен быть слишком простым и распространенным.</li>
+                <li>Пароль не может состоять только из цифр.</li>
+            </ul>
+        </details>
+            
+        <button  class="btn btn-primary" style="width: fit-content; margin-top: 1vh;" type="submit">Регистрация</button>
+    </form>
+{% endblock content %}
