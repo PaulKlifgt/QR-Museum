@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/api/index/'
+LOGOUT_REDIRECT_URL = '/users/login'
+
 
 # Application definition
 
@@ -38,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
+    'users',
+    'django_jinja',
 ]
 
 MIDDLEWARE = [
@@ -53,9 +59,24 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'base.urls'
 
 TEMPLATES = [
-    {
+    
+        {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [ BASE_DIR / 'base'/ 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'environment': 'base.jinja2.environment'
+        },
+        },
+        {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ BASE_DIR / 'base'/ 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
