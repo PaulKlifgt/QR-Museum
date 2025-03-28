@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 #раздел
 class Section(models.Model):
@@ -16,4 +17,12 @@ class Exhibit(models.Model):
     description = models.CharField(max_length=330)
     average_rank = models.FloatField()
     count_rank = models.IntegerField()
-    section = models.ForeignKey(Section, on_delete=models.SET_NULL)
+    section = models.ForeignKey(Section, null=True,  on_delete=models.SET_NULL)
+
+    def toJSON(self):
+        return {'id': self.id,
+                'name': self.name, 
+                'description': self.description, 
+                'average_rank': self.average_rank, 
+                'count_rank': self.count_rank
+                }
