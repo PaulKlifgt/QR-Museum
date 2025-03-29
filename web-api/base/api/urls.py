@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit/<str:type>/<int:id>/', views.edit, name='edit'),
     path('create/<str:type>/', views.create, name='create'),
     path('delete/<str:type>/<int:id>/', views.delete, name='delete'),
+    path('rank/<int:id>/<int:rank>/', views.rank, name='rank')
 ]

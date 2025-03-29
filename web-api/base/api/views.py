@@ -1,7 +1,7 @@
 import copy
 
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from . import models, forms
 
@@ -31,9 +31,7 @@ def get_section_by_id(request, id: int):
     if section:
         section = section[0]
         data = {'name': section.name, 
-                'description': section.description, 
-                'average_rank': section.average_rank, 
-                'count_rank': section.count_rank
+                'description': section.description,
                 }
     else:
         data = {'error': "don't find"}
@@ -114,8 +112,6 @@ def edit(request, type:str, id:int):
                         sec.description = form.cleaned_data['description']
                     else:
                         sec.description = old_sec.description
-                    sec.average_rank = old_sec.average_rank
-                    sec.count_rank = old_sec.count_rank
                 
                     sec.save()
                     return redirect(f'/api/edit/{type}/{id}/')
@@ -172,9 +168,6 @@ def create(request, type:str):
             form = forms.CreateSectionForm(request.POST)
             if form.is_valid():
                 sec = form.save(commit=False)
-                    
-            sec.average_rank = 0.0
-            sec.count_rank = 0
             
             sec.save()
             return redirect(f'/api/create/{type}/')
@@ -214,3 +207,16 @@ def delete(request, type:str, id:int):
         exhibit.delete()
 
     return redirect('index')
+
+
+def rank(request, id:int, rank:int):  
+    exhibit = models.Exhibit.objects.filter(id=id)
+    if exhibit:
+        exhibit = exhibit[0]
+        exhibit.average_rank = (exhibit.average_rank*exhibit.count_rank+rank)/(exhibit.count_rank+1)
+        exhibit.count_rank += 1
+        exhibit.save(update_fields=['average_rank', 'count_rank'])
+        return HttpResponse({})
+    else:
+        return HttpResponse({})
+    
