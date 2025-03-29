@@ -4,11 +4,18 @@ import json
 #раздел
 class Section(models.Model):
 
-    name = models.TextField(max_length=70)
+    name = models.CharField(max_length=70)
     description = models.CharField(max_length=250)
     average_rank = models.FloatField()
     count_rank = models.IntegerField()
-    type_game = models.IntegerField()
+    select_game = (
+        (0, 'No game'),
+        (1, 'Game 1'),
+        (2, 'Game 2'),
+        (3, 'Game 3')
+    )
+
+    type_game = models.IntegerField(choices=select_game)
 
 #экспонат
 class Exhibit(models.Model):
