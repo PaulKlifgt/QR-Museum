@@ -2,4 +2,58 @@
 
 {% block content %}
     <h2>Это главная страница</h2>
+    <hr>
+    <input type="text" name="" id="inp">
+    <div class="need-upd">
+    {% for sec in sections %}
+        <details>
+            <summary class="rr"><span class="s">{{sec.name}}</span><a href="/api/edit/sec/{{sec.id}}">Изменить раздел</a></summary> 
+         
+            {% for exh in sections[sec] %}
+                <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}">Изменить экспонат</a></li> 
+            {% endfor %}
+            
+        </details>
+    {% endfor %}</div>
+    <div style="display: none; position: fixed;
+    background-color: whitesmoke;
+    top: 50%;
+    left: 50%;
+    border: 2px solid black;
+    width: 500px;
+    height: 600px;
+    transform: translate(-50%, -50%);" id="question" >
+        <a href="/api/create/exh/"><button style="text-align:center; margin-top: 50%; margin-left: 35%;">Экспонат</button></a> 
+        
+        <a href="/api/create/sec/"><button>Раздел</button></a>
+    </div>
+    <a onclick="document.getElementById('question').style.display='block'">Новый раздел/экспонат</a>
+    <script>
+        var inp = document.getElementById("inp");
+        var list_det = document.getElementsByClassName('need-upd')[0].getElementsByTagName('details');
+        
+        inp.oninput = function (){
+
+            for (let i = 0; i < list_det.length; i++) {
+                if (inp.value != '') {
+                    console.log('open');
+                    list_det[i].setAttribute('open', true);
+                }
+                else {
+                    list_det[i].removeAttribute('open');
+                }
+                
+                var list_rr = list_det[i].getElementsByClassName('rr')
+                for (let j = 0; j < list_rr.length; j++) {
+
+                    if (!list_rr[j].getElementsByClassName('s')[0].textContent.toLowerCase().includes(inp.value.toLowerCase())) {
+                        $(list_rr[j]).hide();
+                    }
+                    else{
+                        $(list_rr[j]).show();
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock content %}

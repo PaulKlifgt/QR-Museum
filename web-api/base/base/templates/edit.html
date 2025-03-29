@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Страница редактирования {% if section %}
+    раздела
+{% else %}
+    экспоната
+{% endif %}</h2>
+<hr>
+    {% if form %}
+    <form action="" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> 
+        {{form}}
+        <button type="submit">Изменить</button>
+    </form>
+    {% if section %}
+        <a href="/api/delete/sec/{{section.id}}"><button>Удалить</button></a>
+    {% else %}
+        <a href="/api/delete/exh/{{exhibit.id}}"><button>Удалить</button></a>
+    {% endif %}
+    
+        
+
+    {% endif %}
+{% endblock content %}
