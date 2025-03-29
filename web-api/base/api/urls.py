@@ -10,4 +10,6 @@ urlpatterns = [
     path('all_sec/', views.get_all_sections, name='get_all_sections'),
     path('index/', views.index, name='index'),
     path('edit/<str:type>/<int:id>/', views.edit, name='edit'),
+    path('create/<str:type>/', views.create, name='create'),
+    path('delete/<str:type>/<int:id>/', views.delete, name='delete'),
 ]

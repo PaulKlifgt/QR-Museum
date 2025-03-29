@@ -16,7 +16,8 @@ def get_exhibit_by_id(request, id: int):
                 'description': exhibit.description, 
                 'average_rank': exhibit.average_rank, 
                 'count_rank': exhibit.count_rank, 
-                'section': exhibit.section.name}
+                'section': exhibit.section.name,
+                'type_game': exhibit.type_game}
     else:
         data = {'error': "don't find"}
 
@@ -32,9 +33,8 @@ def get_section_by_id(request, id: int):
         data = {'name': section.name, 
                 'description': section.description, 
                 'average_rank': section.average_rank, 
-                'count_rank': section.count_rank, 
-                'type_game': section.type_game}
-        
+                'count_rank': section.count_rank
+                }
     else:
         data = {'error': "don't find"}
 
@@ -58,8 +58,6 @@ def select_exh_by_sec(section_id: int):
         data = {'error': "don't find"}
 
     return data
-
-
 
 def get_exhibit_by_section(request, section_id: int): 
     return JsonResponse(select_exh_by_sec(section_id))
@@ -116,10 +114,6 @@ def edit(request, type:str, id:int):
                         sec.description = form.cleaned_data['description']
                     else:
                         sec.description = old_sec.description
-                    if form.cleaned_data['type_game'] != '':
-                        sec.type_game = form.cleaned_data['type_game']
-                    else:
-                        sec.type_game = old_sec.type_game
                     sec.average_rank = old_sec.average_rank
                     sec.count_rank = old_sec.count_rank
                 
@@ -135,10 +129,7 @@ def edit(request, type:str, id:int):
             context['exhibit'] = exhibit
             if request.method == 'POST':
                 old_exh = copy.deepcopy(exhibit)
-                #exh_name = exhibit.name
-                #exh_description = exhibit.description
-                #exh_section = exhibit.section
-                #exh_average_rank = exhibit
+                
                 form = forms.EditExhibitForm(request.POST, instance=exhibit)
                 if form.is_valid():
                     exh = form.save(commit=False)
@@ -151,10 +142,14 @@ def edit(request, type:str, id:int):
                         exh.description = form.cleaned_data['description']
                     else:
                         exh.description = old_exh.description
-                    if form.cleaned_data['section'] != '':
+                    if form.cleaned_data['section'] != None:
                         exh.section = form.cleaned_data['section']
                     else:
                         exh.section = old_exh.section
+                    if form.cleaned_data['type_game'] != '':
+                        exh.type_game = form.cleaned_data['type_game']
+                    else:
+                        exh.type_game = old_exh.type_game
                     exh.average_rank = old_exh.average_rank
                     exh.count_rank = old_exh.count_rank
                 
@@ -165,3 +160,57 @@ def edit(request, type:str, id:int):
                 context['form'] = form
     
     return render(request, template_name=template_name, context=context)
+
+
+def create(request, type:str):
+    context = {}
+    template_name = 'create.html'
+
+    if type == 'sec':
+        if request.method == 'POST':
+            
+            form = forms.CreateSectionForm(request.POST)
+            if form.is_valid():
+                sec = form.save(commit=False)
+                    
+            sec.average_rank = 0.0
+            sec.count_rank = 0
+            
+            sec.save()
+            return redirect(f'/api/create/{type}/')
+        else:
+            form = forms.CreateSectionForm()
+            context['form'] = form
+            context['section'] = 'section'
+
+    elif type == 'exh':
+        if request.method == 'POST':
+            form = forms.CreateExhibitForm(request.POST)
+            if form.is_valid():
+                exh = form.save(commit=False)
+
+                exh.average_rank = 0.0
+                exh.count_rank = 0
+            
+                exh.save()
+                return redirect(f'/api/create/{type}/')
+        else:
+            form = forms.CreateExhibitForm()
+            context['form'] = form
+            context['exhibit'] = 'exhibit'
+    
+    return render(request, template_name=template_name, context=context)
+
+def delete(request, type:str, id:int):
+
+    if type == 'sec':
+
+        section = models.Section.objects.filter(id=id)
+        section.delete()
+
+    elif type == 'exh':
+
+        exhibit = models.Exhibit.objects.filter(id=id)
+        exhibit.delete()
+
+    return redirect('index')

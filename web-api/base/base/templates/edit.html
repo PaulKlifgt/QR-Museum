@@ -13,6 +13,12 @@
         {{form}}
         <button type="submit">Изменить</button>
     </form>
+    {% if section %}
+        <a href="/api/delete/sec/{{section.id}}"><button>Удалить</button></a>
+    {% else %}
+        <a href="/api/delete/exh/{{exhibit.id}}"><button>Удалить</button></a>
+    {% endif %}
+    
         
 
     {% endif %}
