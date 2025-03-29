@@ -6,8 +6,6 @@ class Section(models.Model):
 
     name = models.CharField(max_length=70)
     description = models.CharField(max_length=250)
-    average_rank = models.FloatField(default=0.0)
-    count_rank = models.IntegerField(default=0)    
 
 #экспонат
 class Exhibit(models.Model):
