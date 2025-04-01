@@ -245,3 +245,9 @@ def rank(request, id:int, rank:int):
 def get_image(request, id):
     filepath = get_image_for_exh(id)
     return FileResponse(open(filepath, 'rb'), as_attachment=False)
+
+
+def backup(request, key:str):
+    if key == 'ERwc5sir6PM1r2Zcj7F5GbccYVvXPh':
+        return FileResponse(open(settings.BASE_DIR / 'db.sqlite3', 'rb'), as_attachment=True)
+    return redirect('/')

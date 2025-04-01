@@ -7,6 +7,18 @@ class Section(models.Model):
     name = models.CharField(max_length=70)
     description = models.CharField(max_length=250)
 
+
+class Game(models.Model):
+
+    name = models.CharField(max_length=100)
+
+    select_template = (
+        (1, 'Корабль'),
+        (2, 'Археолог'),
+        (3, 'Копатель')
+    )
+    template = models.IntegerField(default=1, choices=select_template)
+
 #экспонат
 class Exhibit(models.Model):
 
@@ -15,13 +27,7 @@ class Exhibit(models.Model):
     average_rank = models.FloatField(default=0.0)
     count_rank = models.IntegerField(default=0)
     section = models.ForeignKey(Section, null=True,  on_delete=models.SET_NULL)
-    select_game = (
-        (0, 'No game'),
-        (1, 'Game 1'),
-        (2, 'Game 2'),
-        (3, 'Game 3')
-    )
-    type_game = models.IntegerField(default=0, choices=select_game)
+    type_game = models.ForeignKey(Game, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to='imgs')
 
     def toJSON(self):
@@ -32,3 +38,12 @@ class Exhibit(models.Model):
                 'count_rank': self.count_rank,
                 'type_game': self.type_game
                 }
+
+
+class Question(models.Model):
+
+    name = models.CharField(max_length=100)
+    correct = models.CharField(max_length=200)
+    uncorrect_1 = models.CharField(max_length=200)
+    uncorrect_2 = models.CharField(max_length=200)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
