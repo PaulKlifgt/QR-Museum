@@ -16,9 +16,11 @@ public class ExhibitFrame : MonoBehaviour
     private string starSymbol;
     [SerializeField]
     private GameObject collectedImage;
+    private int id;
 
-    public void SetData(Sprite sprite, string stringName, float floatStars, bool isScanned)
+    public void SetData(int id, Sprite sprite, string stringName, float floatStars, bool isScanned)
     {
+        this.id = id;
         if (isScanned)
         {
             collectedImage.SetActive(true);
@@ -27,6 +29,14 @@ public class ExhibitFrame : MonoBehaviour
         foreach (TMP_Text star in stars)
         {
             star.text = floatStars.ToString() + starSymbol;
+        }
+    }
+    public void CheckScanned()
+    {
+        bool isScanned = DataSaver.GetSaved().Contains(id);
+        if (isScanned)
+        {
+            collectedImage.SetActive(true);
         }
     }
 }
