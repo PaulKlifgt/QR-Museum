@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-jiqh=fn_g)1r(u=k_ntuancf)83@j1pc=m^j+wowsfez-o*#tr
 CSRF_TRUSTED_ORIGINS = ['https://paulklifgt-qr-museum-e7bb.twc1.net', 'https://qrmuseum.tw1.ru']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
