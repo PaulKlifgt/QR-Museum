@@ -91,6 +91,21 @@ def index(request):
     return render(request=request, template_name=template_name, context=context)
 
 
+def games(request):
+    context = {}
+    template_name = 'games.html'
+
+    context['games'] = {}
+
+    games = models.Game.objects.all()
+
+    for game in games:
+        questions_game = models.Question.objects.filter(game=game)
+        context['games'][game] = list(questions_game) 
+
+    return render(request=request, template_name=template_name, context=context)
+
+
 def get_image_for_exh(id: int):
     for f in settings.ALLOWED_UPLOAD_IMAGES:
         filename = str(id)+f
@@ -163,6 +178,50 @@ def edit(request, type:str, id:int):
                 form = forms.EditExhibitForm(initial=default_values)
                 context['form'] = form
     
+    elif type == 'gam':
+        game = models.Game.objects.filter(id=id)
+        if game:
+            game = game[0]
+            context['game'] = game
+            if request.method == 'POST':
+                old_game = copy.deepcopy(game)
+                form = forms.EditGameForm(request.POST, instance=game)
+                if form.is_valid():
+                    game = form.save(commit=False)                
+                    game.save()
+                    return redirect(f'/api/games/')
+            else:
+                default_values = {
+                    'name': game.name,
+                    'template': game.template
+                }
+                form = forms.EditGameForm(initial=default_values)
+                context['form'] = form
+
+    elif type == 'que':
+        que = models.Question.objects.filter(id=id)
+        if que:
+            que = que[0]
+            context['que'] = que
+            if request.method == 'POST':
+                old_que = copy.deepcopy(que)
+                form = forms.EditQuestionForm(request.POST, instance=que)
+                if form.is_valid():
+                    que = form.save(commit=False)                
+                    que.save()
+                    return redirect(f'/api/games/')
+            else:
+                default_values = {
+                    'name': que.name,
+                    'correct': que.correct,
+                    'uncorrect_1': que.uncorrect_1,
+                    'uncorrect_2': que.uncorrect_2,
+                    'game': que.game
+                }
+                form = forms.EditQuestionForm(initial=default_values)
+                context['form'] = form
+
+
     return render(request, template_name=template_name, context=context)
 
 
@@ -210,6 +269,35 @@ def create(request, type:str):
             context['form'] = form
             context['exhibit'] = 'exhibit'
     
+    elif type == 'gam':
+        if request.method == 'POST':
+            
+            form = forms.CreateGameForm(request.POST)
+            if form.is_valid():
+                sec = form.save(commit=False)
+
+            sec.save()
+            return redirect(f'/api/games/')
+        else:
+            form = forms.CreateGameForm()
+            context['form'] = form
+            context['game'] = 'game'
+
+    elif type == 'que':
+        if request.method == 'POST':
+            
+            form = forms.CreateQuestionForm(request.POST)
+            if form.is_valid():
+                sec = form.save(commit=False)
+
+            sec.save()
+            return redirect(f'/api/games/')
+        else:
+            form = forms.CreateQuestionForm()
+            context['form'] = form
+            context['question'] = 'question'
+
+
     return render(request, template_name=template_name, context=context)
 
 
@@ -226,6 +314,14 @@ def delete(request, type:str, id:int):
         filepath = get_image_for_exh(id)
         if filepath:
             os.remove(filepath)
+    
+    elif type == 'gam':
+        game = models.Game.objects.filter(id=id)
+        game.delete()
+
+    elif type == 'que':
+        question = models.Question.objects.filter(id=id)
+        question.delete()
 
     return redirect('index')
 
@@ -237,9 +333,9 @@ def rank(request, id:int, rank:int):
         exhibit.average_rank = (exhibit.average_rank*exhibit.count_rank+rank)/(exhibit.count_rank+1)
         exhibit.count_rank += 1
         exhibit.save(update_fields=['average_rank', 'count_rank'])
-        return HttpResponse({})
+        return redirect('/api/index/')
     else:
-        return HttpResponse({})
+        return redirect('/api/index/')
 
 
 def get_image(request, id):

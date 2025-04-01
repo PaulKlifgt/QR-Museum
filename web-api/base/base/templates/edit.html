@@ -3,8 +3,12 @@
 {% block content %}
 <h2>Страница редактирования {% if section %}
     раздела
-{% else %}
+{% elif exhibit %}
     экспоната
+{% elif game %}
+    игры
+{% else %}
+    вопроса
 {% endif %}</h2>
 <hr>
     {% if form %}
@@ -15,8 +19,12 @@
         </form>
         {% if section %}
             <a href="/api/delete/sec/{{section.id}}"><button>Удалить</button></a>
-        {% else %}
+        {% elif game %}
+            <a href="/api/delete/gam/{{game.id}}"><button>Удалить</button></a>
+        {% elif exhibit %}
             <a href="/api/delete/exh/{{exhibit.id}}"><button>Удалить</button></a>
+        {% else %}
+            <a href="/api/delete/que/{{que.id}}"><button>Удалить</button></a>
         {% endif %}
 
     {% endif %}

@@ -46,4 +46,4 @@ class Question(models.Model):
     correct = models.CharField(max_length=200)
     uncorrect_1 = models.CharField(max_length=200)
     uncorrect_2 = models.CharField(max_length=200)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, null=True, on_delete=models.SET_NULL)

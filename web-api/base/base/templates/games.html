@@ -2,16 +2,16 @@
 
 {% block content %}
     <h2>Это главная страница</h2>
-    <a href="/api/games/">Мини-игры</a>
+    <a href="/api/index/">Разделы</a>
     <hr>
     <input type="text" name="" id="inp">
     <div class="need-upd">
-    {% for sec in sections %}
+    {% for game in games %}
         <details>
-            <summary class="rr"><span class="s">{{sec.name}}</span><a href="/api/edit/sec/{{sec.id}}">Изменить раздел</a></summary> 
+            <summary class="rr"><span class="s">{{game.name}}</span><a href="/api/edit/gam/{{game.id}}">Изменить игру</a></summary> 
          
-            {% for exh in sections[sec] %}
-                <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}">Изменить экспонат</a></li> 
+            {% for que in games[game] %}
+                <li class="rr"><span class="s">{{que.name}}</span><a href="/api/edit/que/{{que.id}}">Изменить вопрос</a></li> 
             {% endfor %}
             
         </details>
@@ -24,11 +24,11 @@
     width: 500px;
     height: 600px;
     transform: translate(-50%, -50%);" id="question" >
-        <a href="/api/create/exh/"><button style="text-align:center; margin-top: 50%; margin-left: 35%;">Экспонат</button></a> 
+        <a href="/api/create/gam/"><button style="text-align:center; margin-top: 50%; margin-left: 35%;">Игра</button></a> 
         
-        <a href="/api/create/sec/"><button>Раздел</button></a>
+        <a href="/api/create/que/"><button>Вопрос</button></a>
     </div>
-    <a onclick="document.getElementById('question').style.display='block'">Новый раздел/экспонат</a>
+    <a onclick="document.getElementById('question').style.display='block'">Новая игра/вопрос</a>
     <script>
         var inp = document.getElementById("inp");
         var list_det = document.getElementsByClassName('need-upd')[0].getElementsByTagName('details');
