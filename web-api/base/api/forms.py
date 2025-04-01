@@ -1,15 +1,17 @@
 from django import forms
 from . import models
 
+
 class EditExhibitForm(forms.ModelForm):
     class Meta:
         model = models.Exhibit
-        fields = ('name', 'description', 'section', 'type_game')
+        fields = ('name', 'description', 'section', 'type_game', 'image')
         labels = {
             'name': 'Имя',
             'description': 'Описание',
             'section': 'Раздел',
-            'type_game': 'Игра'
+            'type_game': 'Игра',
+            'image': 'Фото'
         }
         widgets = {
             'type_game': forms.Select(attrs={'class': 'form-control'})
@@ -21,6 +23,7 @@ class EditExhibitForm(forms.ModelForm):
         self.fields['description'].required = False
         self.fields['section'].required = False
         self.fields['type_game'].required = False
+        self.fields['image'].required = False
         
 
 class EditSectionForm(forms.ModelForm):
@@ -41,12 +44,13 @@ class EditSectionForm(forms.ModelForm):
 class CreateExhibitForm(forms.ModelForm):
     class Meta:
         model = models.Exhibit
-        fields = ('name', 'description', 'section', 'type_game')
+        fields = ('name', 'description', 'section', 'type_game', 'image')
         labels = {
             'name': 'Имя',
             'description': 'Описание',
             'section': 'Раздел',
-            'type_game': 'Игра'
+            'type_game': 'Игра',
+            'image': 'Фото'
         }
         widgets = {
             'type_game': forms.Select(attrs={'class': 'form-control'})
@@ -56,6 +60,7 @@ class CreateExhibitForm(forms.ModelForm):
         super(CreateExhibitForm, self).__init__(*args, **kwargs)
         self.fields['description'].required = False
         self.fields['type_game'].required = False
+        self.fields['image'].required = False
 
 
 class CreateSectionForm(forms.ModelForm):
@@ -65,4 +70,4 @@ class CreateSectionForm(forms.ModelForm):
         labels = {
             'name': 'Имя',
             'description': 'Описание',
-        }
+        }    

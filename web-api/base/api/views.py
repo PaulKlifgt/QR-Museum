@@ -1,9 +1,10 @@
-import copy
+import copy, os.path
 
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 
 from . import models, forms
+from base import settings
 
 # Create your views here.
 def get_exhibit_by_id(request, id: int):
@@ -89,6 +90,16 @@ def index(request):
     return render(request=request, template_name=template_name, context=context)
 
 
+def get_image_for_exh(id: int):
+    for f in settings.ALLOWED_UPLOAD_IMAGES:
+        filename = str(id)+f
+        filepath = settings.MEDIA_ROOT+'/imgs/'+filename
+        if os.path.exists(filepath):
+            return filepath
+    else:
+        return False
+
+
 def edit(request, type:str, id:int):
     context = {}
     template_name = 'edit.html'
@@ -114,7 +125,7 @@ def edit(request, type:str, id:int):
                         sec.description = old_sec.description
                 
                     sec.save()
-                    return redirect(f'/api/edit/{type}/{id}/')
+                    return redirect(f'/api/index/')
             else:
                 form = forms.EditSectionForm()
                 context['form'] = form
@@ -126,7 +137,7 @@ def edit(request, type:str, id:int):
             if request.method == 'POST':
                 old_exh = copy.deepcopy(exhibit)
                 
-                form = forms.EditExhibitForm(request.POST, instance=exhibit)
+                form = forms.EditExhibitForm(request.POST, request.FILES, instance=exhibit)
                 if form.is_valid():
                     exh = form.save(commit=False)
 
@@ -146,11 +157,23 @@ def edit(request, type:str, id:int):
                         exh.type_game = form.cleaned_data['type_game']
                     else:
                         exh.type_game = old_exh.type_game
+                    try:
+                        if request.FILES['image']:
+                            old_img_path = get_image_for_exh(old_exh.id)
+                            if old_img_path:
+                                os.remove(old_img_path)
+                            request.FILES['image'].name = str(old_exh.id) + '.' + request.FILES['image'].name.split(".")[-1]
+                            exh.image = request.FILES['image']
+                        else:
+                            exh.image = old_exh.image 
+                    except Exception:
+                        pass
+
                     exh.average_rank = old_exh.average_rank
                     exh.count_rank = old_exh.count_rank
                 
                     exh.save()
-                    return redirect(f'/api/edit/{type}/{id}/')
+                    return redirect(f'/api/index/')
             else:
                 form = forms.EditExhibitForm()
                 context['form'] = form
@@ -170,7 +193,7 @@ def create(request, type:str):
                 sec = form.save(commit=False)
             
             sec.save()
-            return redirect(f'/api/create/{type}/')
+            return redirect(f'/api/index/')
         else:
             form = forms.CreateSectionForm()
             context['form'] = form
@@ -178,15 +201,24 @@ def create(request, type:str):
 
     elif type == 'exh':
         if request.method == 'POST':
-            form = forms.CreateExhibitForm(request.POST)
+            form = forms.CreateExhibitForm(request.POST, request.FILES)
             if form.is_valid():
+                print(request.FILES)
                 exh = form.save(commit=False)
-
+                last_exh = models.Exhibit.objects.last()
+                try:
+                    if last_exh:
+                        request.FILES['image'].name = str(last_exh.id) + '.' + request.FILES['image'].name.split(".")[-1]
+                    else:
+                        request.FILES['image'].name = '1' + '.' + request.FILES['image'].name.split(".")[-1]
+                    exh.image = request.FILES['image']
+                except Exception:
+                    pass
                 exh.average_rank = 0.0
                 exh.count_rank = 0
             
                 exh.save()
-                return redirect(f'/api/create/{type}/')
+                return redirect('/api/index/')
         else:
             form = forms.CreateExhibitForm()
             context['form'] = form
@@ -194,17 +226,19 @@ def create(request, type:str):
     
     return render(request, template_name=template_name, context=context)
 
+
 def delete(request, type:str, id:int):
 
     if type == 'sec':
-
         section = models.Section.objects.filter(id=id)
         section.delete()
 
     elif type == 'exh':
-
         exhibit = models.Exhibit.objects.filter(id=id)
         exhibit.delete()
+        filepath = get_image_for_exh(id)
+        if filepath:
+            os.remove(filepath)
 
     return redirect('index')
 
@@ -219,4 +253,8 @@ def rank(request, id:int, rank:int):
         return HttpResponse({})
     else:
         return HttpResponse({})
-    
+
+
+def get_image(request, id):
+    filepath = get_image_for_exh(id)
+    return FileResponse(open(filepath, 'rb'), as_attachment=False)

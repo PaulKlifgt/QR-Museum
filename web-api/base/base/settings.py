@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import os
 
 from pathlib import Path
 
@@ -31,6 +32,10 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/api/index/'
 LOGOUT_REDIRECT_URL = '/users/login'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+ALLOWED_UPLOAD_IMAGES = ['.png', '.jpg', '.jpeg', '.bmp', '.webp']
 
 # Application definition
 

@@ -22,6 +22,7 @@ class Exhibit(models.Model):
         (3, 'Game 3')
     )
     type_game = models.IntegerField(default=0, choices=select_game)
+    image = models.ImageField(upload_to='imgs')
 
     def toJSON(self):
         return {'id': self.id,
