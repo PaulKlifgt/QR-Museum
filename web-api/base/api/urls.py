@@ -14,5 +14,6 @@ urlpatterns = [
     path('delete/<str:type>/<int:id>/', views.delete, name='delete'),
     path('rank/<int:id>/<int:rank>/', views.rank, name='rank'),
     path('get_img/<int:id>/', views.get_image, name='get_image'),
-    path('backup/<str:key>/', views.backup, name='backup')
+    path('backup/<str:key>/', views.backup, name='backup'),
+    path('backup_images/<str:key>/', views.backup_images, name='backup_images'),
 ]

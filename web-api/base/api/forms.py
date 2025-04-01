@@ -71,3 +71,26 @@ class CreateSectionForm(forms.ModelForm):
             'name': 'Имя',
             'description': 'Описание',
         }    
+
+
+class CreateGameForm(forms.ModelForm):
+    class Meta:
+        model = models.Game
+        fields = ('name', 'template')
+        labels = {
+            'name': 'Название',
+            'template': 'Шаблон',
+        }    
+
+
+class CreateQuestionForm(forms.ModelForm):
+    class Meta:
+        model = models.Question
+        fields = ('name', 'correct', 'uncorrect_1', 'uncorrect_2', 'game')
+        labels = {
+            'name': 'Название',
+            'correct': 'Правильный ответ',
+            'uncorrect_1': 'Неправильный ответ',
+            'uncorrect_2': 'Неправильный ответ',
+            'game': 'Игра'
+        }    

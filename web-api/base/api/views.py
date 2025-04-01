@@ -1,4 +1,4 @@
-import copy, os.path
+import copy, os.path, shutil
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, FileResponse
@@ -250,4 +250,11 @@ def get_image(request, id):
 def backup(request, key:str):
     if key == 'ERwc5sir6PM1r2Zcj7F5GbccYVvXPh':
         return FileResponse(open(settings.BASE_DIR / 'db.sqlite3', 'rb'), as_attachment=True)
+    return redirect('/')
+
+
+def backup_images(request, key:str):
+    if key == 'ERwc5sir6PM1r2Zcj7F5GbccYVvXPh':
+        filepath = shutil.make_archive('imgs', 'zip', settings.MEDIA_ROOT+'/imgs/')
+        return FileResponse(open(filepath, 'rb'), as_attachment=True)
     return redirect('/')
