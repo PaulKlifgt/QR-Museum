@@ -13,9 +13,7 @@ class EditExhibitForm(forms.ModelForm):
             'type_game': 'Игра',
             'image': 'Фото'
         }
-        widgets = {
-            'type_game': forms.Select(attrs={'class': 'form-control'})
-        }
+       
 
     def __init__(self, *args, **kwargs):
         super(EditExhibitForm, self).__init__(*args, **kwargs)
@@ -52,10 +50,7 @@ class CreateExhibitForm(forms.ModelForm):
             'type_game': 'Игра',
             'image': 'Фото'
         }
-        widgets = {
-            'type_game': forms.Select(attrs={'class': 'form-control'})
-        }
-
+        
     def __init__(self, *args, **kwargs):
         super(CreateExhibitForm, self).__init__(*args, **kwargs)
         self.fields['description'].required = False
@@ -71,3 +66,63 @@ class CreateSectionForm(forms.ModelForm):
             'name': 'Имя',
             'description': 'Описание',
         }    
+
+
+class CreateGameForm(forms.ModelForm):
+    class Meta:
+        model = models.Game
+        fields = ('name', 'template')
+        labels = {
+            'name': 'Название',
+            'template': 'Шаблон',
+        }    
+
+
+class CreateQuestionForm(forms.ModelForm):
+    class Meta:
+        model = models.Question
+        fields = ('name', 'correct', 'uncorrect_1', 'uncorrect_2', 'game')
+        labels = {
+            'name': 'Название',
+            'correct': 'Правильный ответ',
+            'uncorrect_1': 'Неправильный ответ',
+            'uncorrect_2': 'Неправильный ответ',
+            'game': 'Игра'
+        }    
+
+
+class EditGameForm(forms.ModelForm):
+    class Meta:
+        model = models.Game
+        fields = ('name', 'template')
+        labels = {
+            'name': 'Название',
+            'template': 'Шаблон',
+        }    
+
+    def __init__(self, *args, **kwargs):
+        super(EditGameForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = False
+        self.fields['template'].required = False
+
+
+class EditQuestionForm(forms.ModelForm):
+    class Meta:
+        model = models.Question
+        fields = ('name', 'correct', 'uncorrect_1', 'uncorrect_2', 'game')
+        labels = {
+            'name': 'Название',
+            'correct': 'Правильный ответ',
+            'uncorrect_1': 'Неправильный ответ',
+            'uncorrect_2': 'Неправильный ответ',
+            'game': 'Игра'
+        }    
+        
+    def __init__(self, *args, **kwargs):
+        super(EditQuestionForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = False
+        self.fields['correct'].required = False
+        self.fields['uncorrect_1'].required = False
+        self.fields['uncorrect_2'].required = False
+        self.fields['game'].required = False
+
