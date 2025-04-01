@@ -2,6 +2,7 @@ import copy, os.path
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, FileResponse
+from django.contrib.auth.decorators import login_required
 
 from . import models, forms
 from base import settings
@@ -100,6 +101,7 @@ def get_image_for_exh(id: int):
         return False
 
 
+@login_required
 def edit(request, type:str, id:int):
     context = {}
     template_name = 'edit.html'
@@ -113,22 +115,17 @@ def edit(request, type:str, id:int):
                 old_sec = copy.deepcopy(section)
                 form = forms.EditSectionForm(request.POST, instance=section)
                 if form.is_valid():
-                    sec = form.save(commit=False)
-
-                    if form.cleaned_data['name'] != '':
-                        sec.name = form.cleaned_data['name']
-                    else:
-                        sec.name = old_sec.name
-                    if form.cleaned_data['description'] != '':
-                        sec.description = form.cleaned_data['description']
-                    else:
-                        sec.description = old_sec.description
-                
+                    sec = form.save(commit=False)                
                     sec.save()
                     return redirect(f'/api/index/')
             else:
-                form = forms.EditSectionForm()
+                default_values = {
+                    'name': section.name,
+                    'description': section.description
+                }
+                form = forms.EditSectionForm(initial=default_values)
                 context['form'] = form
+
     elif type == 'exh':
         exhibit = models.Exhibit.objects.filter(id=id)
         if exhibit:
@@ -141,31 +138,12 @@ def edit(request, type:str, id:int):
                 if form.is_valid():
                     exh = form.save(commit=False)
 
-                    if form.cleaned_data['name'] != '':
-                        exh.name = form.cleaned_data['name']
-                    else:
-                        exh.name = old_exh.name
-                    if form.cleaned_data['description'] != '':
-                        exh.description = form.cleaned_data['description']
-                    else:
-                        exh.description = old_exh.description
-                    if form.cleaned_data['section'] != None:
-                        exh.section = form.cleaned_data['section']
-                    else:
-                        exh.section = old_exh.section
-                    if form.cleaned_data['type_game'] != '':
-                        exh.type_game = form.cleaned_data['type_game']
-                    else:
-                        exh.type_game = old_exh.type_game
                     try:
-                        if request.FILES['image']:
-                            old_img_path = get_image_for_exh(old_exh.id)
-                            if old_img_path:
-                                os.remove(old_img_path)
-                            request.FILES['image'].name = str(old_exh.id) + '.' + request.FILES['image'].name.split(".")[-1]
-                            exh.image = request.FILES['image']
-                        else:
-                            exh.image = old_exh.image 
+                        old_img_path = get_image_for_exh(old_exh.id)
+                        if old_img_path:
+                            os.remove(old_img_path)
+                        request.FILES['image'].name = str(old_exh.id) + '.' + request.FILES['image'].name.split(".")[-1]
+                        exh.image = request.FILES['image']
                     except Exception:
                         pass
 
@@ -175,12 +153,20 @@ def edit(request, type:str, id:int):
                     exh.save()
                     return redirect(f'/api/index/')
             else:
-                form = forms.EditExhibitForm()
+                default_values = {
+                    'name': exhibit.name,
+                    'description': exhibit.description,
+                    'section': exhibit.section,
+                    'type_game': exhibit.type_game,
+                    'image': exhibit.image
+                }
+                form = forms.EditExhibitForm(initial=default_values)
                 context['form'] = form
     
     return render(request, template_name=template_name, context=context)
 
 
+@login_required
 def create(request, type:str):
     context = {}
     template_name = 'create.html'
@@ -227,6 +213,7 @@ def create(request, type:str):
     return render(request, template_name=template_name, context=context)
 
 
+@login_required
 def delete(request, type:str, id:int):
 
     if type == 'sec':
