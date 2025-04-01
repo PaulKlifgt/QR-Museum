@@ -8,15 +8,12 @@ public class Collection : MonoBehaviour
     private GameObject exhibitPrefab;
     [SerializeField]
     private Transform content;
-
-    public void OnEnable()
+    private List<ExhibitFrame> exhibitFrames = new List<ExhibitFrame>();
+    public void Start()
     {
-        foreach (Transform contentChild in content)
-        {
-            Destroy(contentChild.gameObject);
-        }
+
         var client = new HttpClient();
-        client.BaseAddress = new System.Uri("http://127.0.0.1:8000/");
+        client.BaseAddress = new System.Uri("https://qrmuseum.tw1.ru/");
         var response = client.GetAsync("api/all_sec").Result;
 
 
@@ -32,19 +29,24 @@ public class Collection : MonoBehaviour
                     bool isScanned = false;
                     GameObject spawnedExhibit = Instantiate(exhibitPrefab, content);
                     ExhibitFrame exhibitFrame = spawnedExhibit.GetComponent<ExhibitFrame>();
+                    exhibitFrames.Add(exhibitFrame);
                     if (DataSaver.GetSaved().Contains(sections[i][j][0]))
                     {
                         isScanned = true;
                     }
-                    exhibitFrame.SetData(null, sections[i][j][1], sections[i][j][3], isScanned);
+                    exhibitFrame.SetData(sections[i][j][0], null, sections[i][j][1], sections[i][j][3], isScanned);
                 }
             }
         }
-        
+    }
+    public void RecheckScanned()
+    {
+        foreach (ExhibitFrame exhibitFrame in exhibitFrames)
+        {
+            exhibitFrame.CheckScanned();
+        }
     }
 }
-
-
 public class Exhibit
 {
     public int id;

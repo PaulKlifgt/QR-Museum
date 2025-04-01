@@ -15,5 +15,6 @@ public class Manager : MonoBehaviour
         int screenHeight = Screen.height;
         cameraView.sizeDelta = new Vector2(screenHeight, screenHeight);
         Application.targetFrameRate = 120;
+        
     }
 }

@@ -10,6 +10,12 @@ public class QRScanner : MonoBehaviour
     WebCamTexture webcamTexture;
     string QrCode = string.Empty;
     public bool isScanning = true;
+    [SerializeField]
+    private PopUp popup;
+    public void HidePopUp()
+    {
+        isScanning = true;
+    }
     void Start()
     {
         var renderer = GetComponent<RawImage>();
@@ -24,7 +30,7 @@ public class QRScanner : MonoBehaviour
         IBarcodeReader barCodeReader = new BarcodeReader();
         webcamTexture.Play();
         var snap = new Texture2D(webcamTexture.width, webcamTexture.height, TextureFormat.ARGB32, false);
-        while (string.IsNullOrEmpty(QrCode))
+        while (true)
         {
 
             try
@@ -40,7 +46,8 @@ public class QRScanner : MonoBehaviour
                         {
                             Debug.Log("DECODED TEXT FROM QR: " + QrCode);
                             isScanning = false;
-                            break;
+                            popup.Show(int.Parse(QrCode));
+                            DataSaver.SaveScanned(int.Parse(QrCode));
                         }
                     }
                 }
