@@ -13,6 +13,9 @@ class EditExhibitForm(forms.ModelForm):
             'type_game': 'Игра',
             'image': 'Фото'
         }
+        widgets = {
+            'description': forms.Textarea()
+        }
        
 
     def __init__(self, *args, **kwargs):
@@ -32,6 +35,9 @@ class EditSectionForm(forms.ModelForm):
             'name': 'Имя',
             'description': 'Описание',
         }
+        widgets = {
+            'description': forms.Textarea()
+        }
         
     def __init__(self, *args, **kwargs):
         super(EditSectionForm, self).__init__(*args, **kwargs)
@@ -50,6 +56,9 @@ class CreateExhibitForm(forms.ModelForm):
             'type_game': 'Игра',
             'image': 'Фото'
         }
+        widgets = {
+            'description': forms.Textarea()
+        }
         
     def __init__(self, *args, **kwargs):
         super(CreateExhibitForm, self).__init__(*args, **kwargs)
@@ -66,6 +75,9 @@ class CreateSectionForm(forms.ModelForm):
             'name': 'Имя',
             'description': 'Описание',
         }    
+        widgets = {
+            'description': forms.Textarea()
+        }
 
 
 class CreateGameForm(forms.ModelForm):
@@ -117,7 +129,7 @@ class EditQuestionForm(forms.ModelForm):
             'uncorrect_2': 'Неправильный ответ',
             'game': 'Игра'
         }    
-        
+
     def __init__(self, *args, **kwargs):
         super(EditQuestionForm, self).__init__(*args, **kwargs)
         self.fields['name'].required = False

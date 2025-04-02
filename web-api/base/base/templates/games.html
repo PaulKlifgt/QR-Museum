@@ -4,31 +4,36 @@
     <h2>Это главная страница</h2>
     <a href="/api/index/">Разделы</a>
     <hr>
-    <input type="text" name="" id="inp">
+    <span style="font-size: larger;">🔍</span> <input type="text" name="" id="inp">
+    <br><br>
     <div class="need-upd">
-    {% for game in games %}
-        <details>
-            <summary class="rr"><span class="s">{{game.name}}</span><a href="/api/edit/gam/{{game.id}}">Изменить игру</a></summary> 
-         
-            {% for que in games[game] %}
-                <li class="rr"><span class="s">{{que.name}}</span><a href="/api/edit/que/{{que.id}}">Изменить вопрос</a></li> 
-            {% endfor %}
+        {% for game in games %}
+            <details id="new-details-content">
+                <summary class="rr"><span class="s">{{game.name}}</span><a href="/api/edit/gam/{{game.id}}" title="Изменить игру"> ✏️ </a></summary> 
+
+                {% if games[game] %}
+                    {% for que in games[game] %}
+                        <li class="rr"><span class="s">{{que.name}}</span><a href="/api/edit/que/{{que.id}}" title="Изменить вопрос"> ✏️ </a></li> 
+                    {% endfor %}
+                {% else %}
+                    <l>Тут пусто</l>
+                {% endif %}
             
-        </details>
-    {% endfor %}</div>
-    <div style="display: none; position: fixed;
-    background-color: whitesmoke;
-    top: 50%;
-    left: 50%;
-    border: 2px solid black;
-    width: 500px;
-    height: 600px;
-    transform: translate(-50%, -50%);" id="question" >
-        <a href="/api/create/gam/"><button style="text-align:center; margin-top: 50%; margin-left: 35%;">Игра</button></a> 
-        
-        <a href="/api/create/que/"><button>Вопрос</button></a>
+            
+                
+            </details>
+        {% endfor %}
     </div>
-    <a onclick="document.getElementById('question').style.display='block'">Новая игра/вопрос</a>
+    <div id="question">
+        <h2><a onclick="document.getElementById('question').style.display='none'">❌</a></h2>
+        <h3>Вы хотите создать:</h3>
+        <div>
+            <a href="/api/create/gam/"><button class="btn btn-primary">Игра</button></a> 
+            <a href="/api/create/que/"><button class="btn btn-primary" style="margin-right: 10px;">Вопрос</button></a>
+        </div>   
+    </div>
+    <br>
+    <a onclick="document.getElementById('question').style.display='block'">➕ Новая игра/вопрос</a>
     <script>
         var inp = document.getElementById("inp");
         var list_det = document.getElementsByClassName('need-upd')[0].getElementsByTagName('details');

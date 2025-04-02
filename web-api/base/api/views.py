@@ -1,4 +1,4 @@
-import copy, os.path, shutil
+import copy, os.path, shutil, requests
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, FileResponse
@@ -75,6 +75,36 @@ def get_all_sections(request):
 
     return JsonResponse(data)
 
+
+def get_game(request, id:int):
+    data = {}
+    game = models.Game.objects.filter(id=id)
+    if game:
+        game = game[0]
+        data['name'] = game.name
+        data['template'] = game.template
+    else:
+        data['error'] = "don't find game"
+
+    return JsonResponse(data)
+
+
+def get_questions_by_game_id(request, id:int):
+    data = {}
+    game = models.Game.objects.filter(id=id)
+    if game:
+        questions = models.Question.objects.filter(game=game[0])
+        for q in questions:
+            data[q.id] = {'name': q.name,
+                          'correct': q.correct,
+                          'uncorrect_1': q.uncorrect_1,
+                          'uncorrect_2': q.uncorrect_2,
+                          }
+    else:
+        data['error'] = "don't find game"
+
+    return JsonResponse(data)
+            
 
 def index(request):
     context = {}
@@ -288,9 +318,11 @@ def create(request, type:str):
             
             form = forms.CreateQuestionForm(request.POST)
             if form.is_valid():
-                sec = form.save(commit=False)
+                ques_by_id = models.Question.objects.filter(game=form.cleaned_data['game'])
+                if len(ques_by_id) < 3:
+                    sec = form.save(commit=False)
 
-            sec.save()
+                    sec.save()
             return redirect(f'/api/games/')
         else:
             form = forms.CreateQuestionForm()
@@ -354,3 +386,16 @@ def backup_images(request, key:str):
         filepath = shutil.make_archive('imgs', 'zip', settings.MEDIA_ROOT+'/imgs/')
         return FileResponse(open(filepath, 'rb'), as_attachment=True)
     return redirect('/')
+
+
+def get_qr(request, id:int):
+    filepath = settings.MEDIA_ROOT+'/qrcodes/'+str(id)+'.gif'
+    if not os.path.exists(filepath):
+        response = requests.get(f'http://qrcoder.ru/code/?{id}&10&0')
+        if response.status_code == 200:
+            with open(filepath, 'wb') as f:
+                f.write(response.content)
+        else:
+            return redirect('index')
+    return FileResponse(open(filepath, 'rb'), as_attachment=True)
+        

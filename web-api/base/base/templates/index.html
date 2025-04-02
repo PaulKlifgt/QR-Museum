@@ -4,31 +4,37 @@
     <h2>Это главная страница</h2>
     <a href="/api/games/">Мини-игры</a>
     <hr>
-    <input type="text" name="" id="inp">
+    <span style="font-size: larger;">🔍</span> <input type="text" name="" id="inp">
+    <br><br>
     <div class="need-upd">
-    {% for sec in sections %}
-        <details>
-            <summary class="rr"><span class="s">{{sec.name}}</span><a href="/api/edit/sec/{{sec.id}}">Изменить раздел</a></summary> 
-         
-            {% for exh in sections[sec] %}
-                <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}">Изменить экспонат</a></li> 
-            {% endfor %}
+        {% for sec in sections %}
+            <details id="new-details-content">
+                <summary class="rr"><span class="s">{{sec.name}}</span><a href="/api/edit/sec/{{sec.id}}" style="font-size: larger;" title="Изменить раздел"> ✏️ </a> </summary> 
+
+                {% if sections[sec] %}
+                    {% for exh in sections[sec] %}
+                        <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}" style="font-size: larger;" title="Изменить экспонат"> ✏️     </a>   <a href="/api/qr/{{exh.id}}/" style="font-size: larger; color: black; text-decoration: underline;" title="скачать QR-code экспоната">  QR </a></li> 
+                    {% endfor %}
+                {% else %}
+                    <li>Тут пусто</li>
+                {% endif %}
             
-        </details>
-    {% endfor %}</div>
-    <div style="display: none; position: fixed;
-    background-color: whitesmoke;
-    top: 50%;
-    left: 50%;
-    border: 2px solid black;
-    width: 500px;
-    height: 600px;
-    transform: translate(-50%, -50%);" id="question" >
-        <a href="/api/create/exh/"><button style="text-align:center; margin-top: 50%; margin-left: 35%;">Экспонат</button></a> 
         
-        <a href="/api/create/sec/"><button>Раздел</button></a>
+                
+            </details>
+        {% endfor %}
     </div>
-    <a onclick="document.getElementById('question').style.display='block'">Новый раздел/экспонат</a>
+    <div id="question">
+        <h2><a onclick="document.getElementById('question').style.display='none'">❌</a></h2>
+        <h3>Вы хотите создать:</h3>
+        <div>
+            <a href="/api/create/exh/"><button class="btn btn-primary">Экспонат</button></a> 
+            <a href="/api/create/sec/"><button class="btn btn-primary" style="margin-right: 10px;">Раздел</button></a>
+        </div>
+       
+    </div>
+    <br>
+    <a onclick="document.getElementById('question').style.display='block'">➕ Новый раздел/экспонат</a>
     <script>
         var inp = document.getElementById("inp");
         var list_det = document.getElementsByClassName('need-upd')[0].getElementsByTagName('details');
