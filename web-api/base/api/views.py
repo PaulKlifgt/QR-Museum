@@ -14,12 +14,7 @@ def get_exhibit_by_id(request, id: int):
 
     if exhibit:
         exhibit = exhibit[0]
-        data = {'name': exhibit.name, 
-                'description': exhibit.description, 
-                'average_rank': exhibit.average_rank, 
-                'count_rank': exhibit.count_rank, 
-                'section': exhibit.section.name,
-                'type_game': exhibit.type_game}
+        data = exhibit.toJSON()
     else:
         data = {'error': "don't find"}
 
