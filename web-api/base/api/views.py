@@ -318,9 +318,11 @@ def create(request, type:str):
             
             form = forms.CreateQuestionForm(request.POST)
             if form.is_valid():
-                sec = form.save(commit=False)
+                ques_by_id = models.Question.objects.filter(game=form.cleaned_data['game'])
+                if len(ques_by_id) < 3:
+                    sec = form.save(commit=False)
 
-            sec.save()
+                    sec.save()
             return redirect(f'/api/games/')
         else:
             form = forms.CreateQuestionForm()
