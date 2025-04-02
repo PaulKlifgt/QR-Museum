@@ -3,15 +3,19 @@
 {% block content %}
 <h2>Страница добавления {% if section %}
     раздела
-{% else %}
+{% elif exhibit %}
     экспоната
+{% elif game %}
+    игры
+{% else %}
+    вопроса
 {% endif %}</h2>
 <hr>
     {% if form %}
     <form action="" method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> 
-        {{form}}
-        <button type="submit">Добавить</button>
+        {{form}} <br>
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
         
     {% endif %}

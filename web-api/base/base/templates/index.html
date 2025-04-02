@@ -9,11 +9,11 @@
     <div class="need-upd">
         {% for sec in sections %}
             <details id="new-details-content">
-                <summary class="rr"><span class="s">{{sec.name}}</span><a  href="/api/edit/sec/{{sec.id}}" style="font-size: larger;" title="Изменить раздел"> ✏️ </a></summary> 
+                <summary class="rr"><span class="s">{{sec.name}}</span><a href="/api/edit/sec/{{sec.id}}" style="font-size: larger;" title="Изменить раздел"> ✏️ </a> </summary> 
 
                 {% if sections[sec] %}
                     {% for exh in sections[sec] %}
-                        <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}" style="font-size: larger;" title="Изменить экспонат"> ✏️ </a></li> 
+                        <li class="rr"><span class="s">{{exh.name}}</span><a href="/api/edit/exh/{{exh.id}}" style="font-size: larger;" title="Изменить экспонат"> ✏️     </a>   <a href="/api/qr/{{exh.id}}/" style="font-size: larger; color: black; text-decoration: underline;" title="скачать QR-code экспоната">  QR </a></li> 
                     {% endfor %}
                 {% else %}
                     <li>Тут пусто</li>

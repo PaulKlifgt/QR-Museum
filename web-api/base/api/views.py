@@ -1,4 +1,4 @@
-import copy, os.path, shutil
+import copy, os.path, shutil, requests
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse, FileResponse
@@ -384,3 +384,16 @@ def backup_images(request, key:str):
         filepath = shutil.make_archive('imgs', 'zip', settings.MEDIA_ROOT+'/imgs/')
         return FileResponse(open(filepath, 'rb'), as_attachment=True)
     return redirect('/')
+
+
+def get_qr(request, id:int):
+    filepath = settings.MEDIA_ROOT+'/qrcodes/'+str(id)+'.gif'
+    if not os.path.exists(filepath):
+        response = requests.get(f'http://qrcoder.ru/code/?{id}&10&0')
+        if response.status_code == 200:
+            with open(filepath, 'wb') as f:
+                f.write(response.content)
+        else:
+            return redirect('index')
+    return FileResponse(open(filepath, 'rb'), as_attachment=True)
+        
