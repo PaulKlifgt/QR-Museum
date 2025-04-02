@@ -76,6 +76,36 @@ def get_all_sections(request):
     return JsonResponse(data)
 
 
+def get_game(request, id:int):
+    data = {}
+    game = models.Game.objects.filter(id=id)
+    if game:
+        game = game[0]
+        data['name'] = game.name
+        data['template'] = game.template
+    else:
+        data['error'] = "don't find game"
+
+    return JsonResponse(data)
+
+
+def get_questions_by_game_id(request, id:int):
+    data = {}
+    game = models.Game.objects.filter(id=id)
+    if game:
+        questions = models.Question.objects.filter(game=game[0])
+        for q in questions:
+            data[q.id] = {'name': q.name,
+                          'correct': q.correct,
+                          'uncorrect_1': q.uncorrect_1,
+                          'uncorrect_2': q.uncorrect_2,
+                          }
+    else:
+        data['error'] = "don't find game"
+
+    return JsonResponse(data)
+            
+
 def index(request):
     context = {}
     template_name = 'index.html'
