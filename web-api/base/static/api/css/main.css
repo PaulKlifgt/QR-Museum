@@ -1,0 +1,44 @@
+#inp{
+    border: none;
+    border-bottom: 1px solid black;
+    width: 250px;
+}
+
+#inp:focus{
+    outline: none;
+    background-color: whitesmoke;
+}
+
+a{
+    text-decoration: none;
+}
+
+body {
+    zoom: 1.2;
+}
+
+#question{
+    display: none;
+    position: fixed;
+    background-color: #fff;
+    border: 2px solid black;
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    width: 500px;
+    height: 600px;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    h2{
+        margin-right: 15px;
+        float: right;
+        margin-top: 10px;
+    }
+    h3{
+        margin-top: 40%;
+    }
+    div{
+        width: fit-content;
+        margin: 0 auto;
+    }
+}
