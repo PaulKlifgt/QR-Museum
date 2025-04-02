@@ -32,14 +32,16 @@ class Exhibit(models.Model):
 
     def toJSON(self):
         if self.type_game:
-            return {'name': self.name, 
+            return {'id': self.id,
+                    'name': self.name, 
                     'description': self.description, 
                     'average_rank': self.average_rank, 
                     'count_rank': self.count_rank, 
                     'section': self.section.name,
                     'type_game': self.type_game.id}
         else:
-            return {'name': self.name, 
+            return {'id': self.id,
+                    'name': self.name, 
                     'description': self.description, 
                     'average_rank': self.average_rank, 
                     'count_rank': self.count_rank, 
