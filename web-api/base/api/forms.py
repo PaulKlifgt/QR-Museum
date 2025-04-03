@@ -14,16 +14,18 @@ class EditExhibitForm(forms.ModelForm):
             'image': 'Фото'
         }
         widgets = {
-            'description': forms.Textarea()
+            'description': forms.Textarea(),
+
         }
-       
 
     def __init__(self, *args, **kwargs):
         super(EditExhibitForm, self).__init__(*args, **kwargs)
         self.fields['name'].required = False
         self.fields['description'].required = False
         self.fields['section'].required = False
+        self.fields['section'].label_from_instance = lambda obj: "%s" % (obj.name)
         self.fields['type_game'].required = False
+        self.fields['type_game'].label_from_instance = lambda obj: "%s" % (obj.name)
         self.fields['image'].required = False
         
 
@@ -63,7 +65,9 @@ class CreateExhibitForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CreateExhibitForm, self).__init__(*args, **kwargs)
         self.fields['description'].required = False
+        self.fields['section'].label_from_instance = lambda obj: "%s" % (obj.name)
         self.fields['type_game'].required = False
+        self.fields['type_game'].label_from_instance = lambda obj: "%s" % (obj.name)
         self.fields['image'].required = False
 
 
@@ -101,6 +105,10 @@ class CreateQuestionForm(forms.ModelForm):
             'uncorrect_2': 'Неправильный ответ',
             'game': 'Игра'
         }    
+    def __init__(self, *args, **kwargs):
+        super(CreateQuestionForm, self).__init__(*args, **kwargs)
+        self.fields['game'].label_from_instance = lambda obj: "%s" % (obj.name)
+    
 
 
 class EditGameForm(forms.ModelForm):
@@ -137,4 +145,4 @@ class EditQuestionForm(forms.ModelForm):
         self.fields['uncorrect_1'].required = False
         self.fields['uncorrect_2'].required = False
         self.fields['game'].required = False
-
+        self.fields['game'].label_from_instance = lambda obj: "%s" % (obj.name)

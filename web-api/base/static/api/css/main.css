@@ -2,7 +2,21 @@ input{
     width: 250px;
 }
 
+details > summary {
+    list-style-type: none;
+}
+summary::marker {
+    content: none;
+}
 
+details > summary::before {
+    content: '▶️';
+    margin-right: 7px;
+}
+
+details[open] > summary::before {
+    content: '🔽';
+}
 
 
 #inp{
